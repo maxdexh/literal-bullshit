@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.kit.kastel</groupId>
-    <artifactId>Blatt-4-Aufgabe-A</artifactId>
+    <artifactId>Blatt-4---Aufgabe-A</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>Blatt-4-Aufgabe-A</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -23,8 +22,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>
