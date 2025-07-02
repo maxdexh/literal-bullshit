@@ -38,8 +38,8 @@ public final class CommandHandler implements AutoCloseable {
         System.load(LIB_PATH + System.mapLibraryName(LIB_FILE + System.nanoTime() % LOADER_WORKAROUND_LIB_COUNT));
     }
 
-    private native CommandResult handleCommandNative(long state, String command);
-    private native void cleanupNative(long state);
-    private native long initNative();
+    private static native CommandResult handleCommandNative(long state, String command);
+    private static native void cleanupNative(long state);
+    private static native long initNative();
 }
 
