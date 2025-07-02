@@ -7,7 +7,7 @@ package edu.kit.kastel;
  */
 public final class CommandHandler implements AutoCloseable {
     private static final String ALREADY_CLOSED = "This handler was already closed";
-    private static final String LIB_PATH = System.getenv("PWD") + "/assignment@tmp/resources/" + System.mapLibraryName("a4native");
+    private static final String LIB_PATH = System.getenv("PWD") + "/assignment/resources/" + System.mapLibraryName("a4native");
 
     private long rawState = initNative();
 
@@ -32,19 +32,6 @@ public final class CommandHandler implements AutoCloseable {
     }
 
     static {
-        if (true) {
-            try {
-                var test = Runtime.getRuntime().exec(new String[] { "ls", "target/classes" });
-                var scanner = new java.util.Scanner(test.getInputStream());
-                var out = "";
-                while (scanner.hasNextLine()) {
-                    out += scanner.nextLine() + "\n";
-                }
-                throw new RuntimeException(out);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex.getMessage());
-            }
-        }
         System.load(LIB_PATH);
     }
 
