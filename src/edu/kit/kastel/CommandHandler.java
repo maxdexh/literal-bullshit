@@ -9,6 +9,8 @@ public final class CommandHandler implements AutoCloseable {
     private static final String ALREADY_CLOSED = "This handler was already closed";
     private static final String LIB_PATH = System.getenv("PWD") + "/assignment/resources/";
     private static final String LIB_FILE = "a4native";
+    private static final long NULL = 0;
+    private static final long LOADER_WORKAROUND_LIB_COUNT = 200;
 
     private long rawState = initNative();
 
@@ -20,7 +22,7 @@ public final class CommandHandler implements AutoCloseable {
      * @throws IllegalStateException If this handler has been closed
      */
     public synchronized CommandResult handleCommand(String command) {
-        if (rawState == 0) {
+        if (rawState == NULL) {
             throw new IllegalStateException(ALREADY_CLOSED);
         }
         return handleCommandNative(rawState, command);
@@ -29,11 +31,11 @@ public final class CommandHandler implements AutoCloseable {
     @Override
     public synchronized void close() {
         cleanupNative(rawState);
-        rawState = 0;
+        rawState = NULL;
     }
 
     static {
-        System.load(LIB_PATH + System.mapLibraryName(LIB_FILE + System.nanoTime() % 200));
+        System.load(LIB_PATH + System.mapLibraryName(LIB_FILE + System.nanoTime() % LOADER_WORKAROUND_LIB_COUNT));
     }
 
     private native CommandResult handleCommandNative(long state, String command);
