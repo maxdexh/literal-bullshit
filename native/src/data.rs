@@ -1,5 +1,10 @@
 use std::{
-    collections::HashMap, fmt::Display, num::NonZeroU32, ops::Range, str::FromStr, sync::LazyLock,
+    collections::HashMap,
+    fmt::Display,
+    num::NonZeroU32,
+    ops::{Mul, Range},
+    str::FromStr,
+    sync::LazyLock,
 };
 
 use anyhow::{bail, ensure};
@@ -37,7 +42,7 @@ impl Display for HotelId {
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Debug)]
 pub struct Price {
-    cents: num::BigUint,
+    pub cents: num::BigUint,
 }
 impl Price {
     const UNIT: char = '€';
@@ -129,6 +134,12 @@ impl Display for Category {
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Date(time::Date);
+impl Date {
+    pub fn into_inner(self) -> time::Date {
+        let Self(date) = self;
+        date
+    }
+}
 
 static DATE_FORMAT: LazyLock<time::format_description::OwnedFormatItem> =
     LazyLock::new(|| time::format_description::parse_owned::<2>("[year]-[month]-[day]").unwrap());

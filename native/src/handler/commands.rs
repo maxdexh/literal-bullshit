@@ -145,8 +145,13 @@ fn find_cheapest(
             },
         )
         .min_by_key(|(hotel, room, price)| (*price, *hotel, *room));
+
     if let Some((hotel, room, price)) = min {
-        Ok(format!("{hotel} {room} {price}"))
+        let days = (end.into_inner() - start.into_inner()).whole_days();
+        let total = Price {
+            cents: &price.cents * days as u64,
+        };
+        Ok(format!("{hotel} {room} {total}"))
     } else {
         Ok(String::new())
     }
