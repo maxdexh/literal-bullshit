@@ -34,7 +34,7 @@ public final class CommandHandler implements AutoCloseable {
     static {
         if (true) {
             try {
-                var test = Runtime.getRuntime().exec("ls 'assignment@tmp'");
+                var test = Runtime.getRuntime().exec(new String[] { "ls", "target" });
                 var scanner = new java.util.Scanner(test.getInputStream());
                 var out = "";
                 while (scanner.hasNextLine()) {
