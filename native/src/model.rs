@@ -3,7 +3,7 @@ use std::{
     ops::Range,
 };
 
-use anyhow::{bail, ensure};
+use anyhow::{Result, bail, ensure};
 
 use crate::data::{
     Booking, BookingId, Category, CustomerId, Date, HotelData, HotelId, Person, Price, RoomData,
@@ -25,7 +25,7 @@ impl Model {
         }
     }
 
-    pub fn add_hotel(&mut self, id: HotelId, city: String) -> anyhow::Result<()> {
+    pub fn add_hotel(&mut self, id: HotelId, city: String) -> Result<()> {
         match self.hotels.entry(id) {
             Entry::Occupied(_) => bail!("Hotel ID is already in use"),
             Entry::Vacant(vacant) => vacant.insert(HotelData {
@@ -41,7 +41,7 @@ impl Model {
         room_id: u64,
         category: Category,
         price: Price,
-    ) -> anyhow::Result<()> {
+    ) -> Result<()> {
         let Some(hotel_data) = self.hotels.get_mut(&hotel_id) else {
             bail!("Hotel with id {hotel_id} does not exist")
         };
@@ -55,7 +55,7 @@ impl Model {
         };
         Ok(())
     }
-    pub fn remove_room(&mut self, hotel_id: HotelId, room_id: u64) -> anyhow::Result<()> {
+    pub fn remove_room(&mut self, hotel_id: HotelId, room_id: u64) -> Result<()> {
         self.hotels
             .get_mut(&hotel_id)
             .ok_or_else(|| anyhow::format_err!("Unknown hotel ID {hotel_id}"))?
@@ -64,7 +64,7 @@ impl Model {
             .ok_or_else(|| anyhow::format_err!("Unknown room ID {room_id}"))?;
         Ok(())
     }
-    pub fn remove_hotel(&mut self, id: HotelId) -> anyhow::Result<()> {
+    pub fn remove_hotel(&mut self, id: HotelId) -> Result<()> {
         self.hotels
             .remove_entry(&id)
             .ok_or_else(|| anyhow::format_err!("Unknown hotel ID {id}"))?;
@@ -80,8 +80,12 @@ impl Model {
         city: &str,
         category: Category,
         time: Range<&Date>,
-    ) -> impl Iterator<Item = (HotelId, u64, &Price)> {
-        self.hotels
+    ) -> Result<impl Iterator<Item = (HotelId, u64, &Price)>> {
+        if time.start >= time.end {
+            bail!("Invalid date range")
+        }
+        Ok(self
+            .hotels
             .iter()
             .filter(move |(_, hd)| hd.city == city)
             .flat_map(move |(hi, hd)| {
@@ -95,7 +99,7 @@ impl Model {
                     }
                     Some((*hi, *ri, &rd.price))
                 })
-            })
+            }))
     }
     pub fn book(
         &mut self,
@@ -103,7 +107,10 @@ impl Model {
         room_id: u64,
         time: Range<Date>,
         customer: CustomerId,
-    ) -> anyhow::Result<BookingId> {
+    ) -> Result<BookingId> {
+        if time.start >= time.end {
+            bail!("Invalid date range")
+        }
         let room = self
             .hotels
             .get_mut(&hotel_id)
@@ -131,7 +138,7 @@ impl Model {
         })
     }
 
-    pub fn cancel(&mut self, booking_id: BookingId, customer: CustomerId) -> anyhow::Result<()> {
+    pub fn cancel(&mut self, booking_id: BookingId, customer: CustomerId) -> Result<()> {
         for hotel in self.hotels.values_mut() {
             for room in hotel.rooms.values_mut() {
                 let Some(idx) = room

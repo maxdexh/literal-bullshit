@@ -143,7 +143,7 @@ fn find_cheapest(
                 start: &start,
                 end: &end,
             },
-        )
+        )?
         .min_by_key(|(hotel, room, price)| (*price, *hotel, *room));
 
     if let Some((hotel, room, price)) = min {
@@ -172,7 +172,7 @@ fn find_available(
                 start: &start,
                 end: &end,
             },
-        )
+        )?
         .collect();
 
     rooms.sort_unstable_by_key(|(hotel, room, _)| (*hotel, *room));
