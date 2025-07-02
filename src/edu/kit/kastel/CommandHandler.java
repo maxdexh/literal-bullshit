@@ -35,6 +35,7 @@ public final class CommandHandler implements AutoCloseable {
         try {
             System.load(LIB_PATH);
         } catch (UnsatisfiedLinkError ignored) {
+            ignored.equals(ignored); // thank you checkstyle
         }
     }
 
