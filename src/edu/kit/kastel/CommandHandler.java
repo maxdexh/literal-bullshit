@@ -32,7 +32,10 @@ public final class CommandHandler implements AutoCloseable {
     }
 
     static {
-        System.load(LIB_PATH);
+        if (true) {
+            throw new RuntimeException(System.getenv("PWD"));
+        }
+        // System.load(LIB_PATH);
     }
 
     private native CommandResult handleCommandNative(long state, String command);
