@@ -31,7 +31,7 @@ impl CommandHandler {
                 is_quitting,
             },
             Err(err) => CommandResult {
-                command_output: format!("ERROR: {err}"),
+                command_output: format!("Error: {err}"),
                 is_error: true,
                 is_quitting: false,
             },
