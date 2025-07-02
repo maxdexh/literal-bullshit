@@ -22,8 +22,10 @@ public final class Main {
             while (input.hasNextLine()) {
                 var result = handler.handleCommand(input.nextLine());
 
-                (result.isError() ? System.err : System.out)
-                    .println(result.commandOutput());
+                if (!result.commandOutput().isEmpty()) {
+                    (result.isError() ? System.err : System.out)
+                        .println(result.commandOutput());
+                }
 
                 if (result.isQuitting()) {
                     break;
