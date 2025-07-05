@@ -21,7 +21,7 @@ public final class CommandHandler implements AutoCloseable {
      * @return The result of the command
      * @throws IllegalStateException If this handler has been closed
      */
-    public CommandResult handleCommand(String command) {
+    public synchronized CommandResult handleCommand(String command) {
         if (rawState == INVALID_POINTER) {
             throw new IllegalStateException(ALREADY_CLOSED);
         }
@@ -29,7 +29,7 @@ public final class CommandHandler implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public synchronized void close() {
         cleanupNative(rawState);
         rawState = INVALID_POINTER;
     }
